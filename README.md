@@ -6,13 +6,13 @@ This is a Ansible role to install K8S by using kubeadm (Tested on Ubuntu 20.04)
 
 Ansible 2.9
 
-## Role Variables
+## Default variables
 
-|Variable|Default Value|Description|
+|Variable|Value|Description|
 |---|---|---|
 ```DOCKER_GPG_URL```|https://download.docker.com/linux/ubuntu/gpg|
-```DOCKER_GPG_PATH```|https://download.docker.com/linux/ubuntu/gpg|
-```DOCKER_VERSION```|5:20.10.6~3-0~ubuntu-focal|
+```DOCKER_GPG_PATH```|/usr/share/keyrings/docker-archive-keyring.gpg|
+```DOCKER_VERSION```|`5:20.10.6~3-0~ubuntu-focal`|
 ```KUBE_GPG_URL```|https://packages.cloud.google.com/apt/doc/apt-key.gpg|
 ```KUBE_GPG_PATH```|/usr/share/keyrings/kubernetes-archive-keyring.gpg|
 ```KUBE_VERSION```|1.21.1-00|
@@ -53,13 +53,5 @@ all:
 ansible-playbook -i inventory.yml playbook.yml \
 -e ansible_ssh_user=vagrant \
 -e ansible_ssh_pass=vagrant
-
-
-## License
-
-MIT / BSD
-
-## Author Information
-
-willyhu.tw@gmail.com
+```
 
