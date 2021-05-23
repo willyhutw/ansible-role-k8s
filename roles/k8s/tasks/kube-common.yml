@@ -1,0 +1,20 @@
+---
+
+- name: Kube Common | Add kubernetes official GPG key
+  apt_key:
+    url: "{{ KUBE_GPG_URL }}"
+    keyring: "{{ KUBE_GPG_PATH }}"
+
+- name: Kube Common | Copy kubernetes.list to /etc/apt/sources.list.d/
+  template:
+    src: kubernetes.list.j2
+    dest: /etc/apt/sources.list.d/kubernetes.list
+
+- name: Kube Common | Install kubernetes packages
+  apt:
+    pkg:
+      - kubectl={{ KUBE_VERSION }}
+      - kubelet={{ KUBE_VERSION }}
+      - kubeadm={{ KUBE_VERSION }}
+    update_cache: yes
+

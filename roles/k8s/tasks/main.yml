@@ -1,0 +1,13 @@
+---
+
+- include: common.yml
+
+- include: docker.yml
+
+- include: kube-common.yml
+
+- include: kube-master.yml
+  when: inventory_hostname in groups['master']
+  
+- include: kube-worker.yml
+  when: inventory_hostname in groups['worker']

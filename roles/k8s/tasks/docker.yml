@@ -1,0 +1,35 @@
+---
+
+- name: Docker | Install common packages
+  apt:
+    pkg:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - gnupg
+      - lsb-release
+    update_cache: yes
+
+- name: Docker | Add Docker’s official GPG key
+  apt_key:
+    url: "{{ DOCKER_GPG_URL }}"
+    keyring: "{{ DOCKER_GPG_PATH }}"
+
+- name: Docker | Copy docker.list to /etc/apt/sources.list.d/
+  template:
+    src: docker.list.j2
+    dest: /etc/apt/sources.list.d/docker.list
+
+- name: Docker | Install docker
+  apt:
+    pkg:
+      - docker-ce={{ DOCKER_VERSION }}
+      - docker-ce-cli={{ DOCKER_VERSION }}
+      - containerd.io
+    update_cache: yes
+
+- name: Docker | Add user to docker group
+  user:
+    name: "{{ lookup('env','USER') }}"
+    group: docker
+

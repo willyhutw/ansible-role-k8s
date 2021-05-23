@@ -1,0 +1,12 @@
+---
+
+UBUNTU_RELEASE_NAME: "{{ ansible_distribution_release }}"
+DOCKER_GPG_URL: https://download.docker.com/linux/ubuntu/gpg
+DOCKER_GPG_PATH: /usr/share/keyrings/docker-archive-keyring.gpg
+DOCKER_VERSION: 5:20.10.6~3-0~ubuntu-focal
+KUBE_GPG_URL: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+KUBE_GPG_PATH: /usr/share/keyrings/kubernetes-archive-keyring.gpg
+KUBE_VERSION: 1.21.1-00
+KUBE_POD_NETWORK: https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+KUBE_POD_CIDR: 10.244.0.0/16
+KUBE_JOIN_CMD_PATH: /vagrant_data/join.cmd
