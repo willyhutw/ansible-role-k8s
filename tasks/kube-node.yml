@@ -1,0 +1,22 @@
+---
+
+- name: Kube - Node | Check if kubelet.conf exist
+  stat:
+    path: /etc/kubernetes/kubelet.conf
+  register: kubelet_conf
+
+- name: Kube - Node | Copy join command from localhost
+  copy:
+    src: /tmp/join_cmd
+    dest: /tmp/join_cmd
+  when: not kubelet_conf.stat.exists
+
+- name: Kube - Node | Set join command as variable
+  slurp:
+    src: /tmp/join_cmd_node
+  register: join_command
+  when: not kubelet_conf.stat.exists
+
+- name: Kube - Node | Run join command
+  shell: "{{ join_command['content'] | b64decode }}"
+  when: not kubelet_conf.stat.exists

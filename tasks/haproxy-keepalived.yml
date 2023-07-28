@@ -1,0 +1,32 @@
+---
+
+- name: HAProxy - Keepalived | Install packages
+  apt:
+    pkg:
+      - haproxy
+      - keepalived
+    update_cache: yes
+
+- name: HAProxy - Keepalived | Copy haproxy.cfg
+  template:
+    src: haproxy.cfg.j2
+    dest: /etc/haproxy/haproxy.cfg
+  notify:
+    - restart-haproxy
+
+- name: HAProxy - Keepalived | Start haproxy service
+  service:
+    name: haproxy.service
+    state: started
+
+- name: HAProxy - Keepalived | Copy keepalived.conf
+  template:
+    src: keepalived.conf.j2
+    dest: /etc/keepalived/keepalived.conf
+  notify:
+    - restart-keepalived
+
+- name: HAProxy - Keepalived | Start keepalived service
+  service:
+    name: keepalived.service
+    state: started

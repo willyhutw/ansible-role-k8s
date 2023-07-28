@@ -2,12 +2,18 @@
 
 - include: common.yml
 
-- include: docker.yml
+- include: container.yml
 
 - include: kube-common.yml
 
-- include: kube-master.yml
-  when: inventory_hostname in groups['master']
+- include: haproxy-keepalived.yml
+  when: inventory_hostname in groups['control_plane']
+
+- include: kube-control-plane-init.yml
+  when: inventory_hostname in groups['control_plane_init']
+
+- include: kube-control-plane-join.yml
+  when: inventory_hostname in groups['control_plane_join']
   
-- include: kube-worker.yml
-  when: inventory_hostname in groups['worker']
+- include: kube-node.yml
+  when: inventory_hostname in groups['node']

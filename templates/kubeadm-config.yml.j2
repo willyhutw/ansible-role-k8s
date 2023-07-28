@@ -1,0 +1,19 @@
+---
+apiVersion: kubeadm.k8s.io/v1beta3
+kind: InitConfiguration
+localAPIEndpoint:
+  advertiseAddress: {{ inventory_hostname }}
+  bindPort: 6443
+
+---
+apiVersion: kubeadm.k8s.io/v1beta3
+kind: ClusterConfiguration
+kubernetesVersion: v{{ CLUSTER_VERSION }}
+clusterName: {{ CLUSTER_NAME }}
+controlPlaneEndpoint: {{ CLUSTER_VIP }}:{{ CLUSTER_PORT }}
+networking:
+  serviceSubnet: {{ KUBE_SVC_CIDR }}
+  podSubnet: {{ KUBE_POD_CIDR }}
+  dnsDomain: {{ CLUSTER_DOMAIN }}
+certificatesDir: /etc/kubernetes/pki
+imageRepository: registry.k8s.io

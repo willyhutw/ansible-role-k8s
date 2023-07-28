@@ -1,20 +1,37 @@
 ---
 
-- name: Kube Common | Add kubernetes official GPG key
+- name: Kube - Common | Install common packages
+  apt:
+    pkg:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - gnupg
+    update_cache: yes
+
+- name: Kube - Common | Add k8s official GPG key
   apt_key:
     url: "{{ KUBE_GPG_URL }}"
     keyring: "{{ KUBE_GPG_PATH }}"
 
-- name: Kube Common | Copy kubernetes.list to /etc/apt/sources.list.d/
+- name: Kube - Common | Copy docker.list to /etc/apt/sources.list.d/
   template:
     src: kubernetes.list.j2
     dest: /etc/apt/sources.list.d/kubernetes.list
 
-- name: Kube Common | Install kubernetes packages
+- name: Kube - Common | Install kubeadm, kubelet, kubectl
   apt:
     pkg:
-      - kubectl={{ KUBE_VERSION }}
-      - kubelet={{ KUBE_VERSION }}
-      - kubeadm={{ KUBE_VERSION }}
+      - kubectl={{ CLUSTER_VERSION }}-00
+      - kubelet={{ CLUSTER_VERSION }}-00
+      - kubeadm={{ CLUSTER_VERSION }}-00
     update_cache: yes
 
+- name: Kube - Common | Hold kubeadm, kubelet, kubectl version
+  dpkg_selections:
+    name: "{{ item }}"
+    selection: hold
+  with_items:
+    - kubeadm
+    - kubelet
+    - kubectl

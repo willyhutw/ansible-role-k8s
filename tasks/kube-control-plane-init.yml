@@ -1,0 +1,57 @@
+---
+
+- name: Kube - Control Plane - Init | Check if kube-apiserver.yaml exist
+  stat:
+    path: /etc/kubernetes/manifests/kube-apiserver.yaml
+  register: kube_apiserver
+
+- name: Kube - Control Plane - Init | Copy kubeadm-config.yml
+  template:
+    src: kubeadm-config.yml.j2
+    dest: /tmp/kubeadm-config.yml
+  when: not kube_apiserver.stat.exists
+
+- name: Kube - Control Plane - Init | Initial K8S cluster
+  shell: kubeadm init --config=/tmp/kubeadm-config.yml --upload-certs
+  when: not kube_apiserver.stat.exists
+
+- name: Kube - Control Plane - Init | Generate the join command
+  shell: kubeadm token create --print-join-command
+  register: join_cmd
+  when: not kube_apiserver.stat.exists
+
+- name: Kube - Control Plane - Init | Copy the join command to localhost (node)
+  local_action: copy content="{{ join_cmd.stdout }}" dest="/tmp/join_cmd" mode=0644
+  become: false
+  when: not kube_apiserver.stat.exists
+
+- name: Kube - Control Plane - Init | Generate certificate key
+  shell: kubeadm init phase upload-certs --upload-certs --skip-headers | grep -v upload-certs
+  register: cert_key
+  when: not kube_apiserver.stat.exists
+
+- name: Kube - Control Plane - Init | Copy the join command to localhost (control-plane)
+  local_action: copy content="{{ join_cmd.stdout }} --control-plane --certificate-key {{ cert_key.stdout }}" dest="/tmp/join_cmd_control_plane" mode=0644
+  become: false
+  when: not kube_apiserver.stat.exists
+
+- name: Kube - Control Plane - Init | Create .kube directory
+  file:
+    path: "{{ lookup('env','HOME') }}/.kube"
+    state: directory
+  become_user: "{{ lookup('env','USER') }}"
+  when: not kube_apiserver.stat.exists
+
+- name: Kube - Control Plane - Init | Copy config file
+  copy:
+    src: /etc/kubernetes/admin.conf
+    dest: "{{ lookup('env','HOME') }}/.kube/config"
+    remote_src: yes
+    owner: "{{ lookup('env','USER') }}"
+    group: "{{ lookup('env','USER') }}"
+  when: not kube_apiserver.stat.exists
+
+- name: Kube - Control Plane - Init | Install pod network addon
+  shell: kubectl apply -f {{ KUBE_POD_NETWORK }}
+  become_user: "{{ lookup('env','USER') }}"
+  when: not kube_apiserver.stat.exists

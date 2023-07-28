@@ -1,0 +1,41 @@
+# /etc/keepalived/keepalived.conf
+
+global_defs {
+  router_id LVS_DEVEL
+}
+
+vrrp_script check_haproxy {
+  script "killall -0 haproxy"
+  interval 3
+  weight -2
+  fall 10
+  rise 2
+}
+
+vrrp_instance haproxy-vip {
+  state BACKUP
+  interface {{ KEEPALIVED_IFACE }}
+  virtual_router_id {{ KEEPALIVED_VROUTER_ID }}
+  priority {{ hostvars[inventory_hostname].priority }}
+  advert_int 1
+  authentication {
+    auth_type PASS
+    auth_pass 1234
+  }
+  unicast_src_ip {{ inventory_hostname }}
+  unicast_peer {
+    {% for host in groups['control_plane'] -%}
+      {% if host != inventory_hostname -%}
+        {{ host }}
+      {% endif -%}
+    {% endfor -%}
+  }
+
+  virtual_ipaddress {
+    {{ CLUSTER_VIP }}/24
+  }
+
+  track_script {
+    check_haproxy
+  }
+}

@@ -1,0 +1,22 @@
+---
+
+- name: Kube - Control Plane - Join | Check if kube-apiserver.yaml exist
+  stat:
+    path: /etc/kubernetes/manifests/kube-apiserver.yaml
+  register: kube_apiserver
+
+- name: Kube - Control Plane - Join | Copy join_cmd_control_plane from localhost
+  copy:
+    src: /tmp/join_cmd_control_plane
+    dest: /tmp/join_cmd_control_plane
+  when: not kube_apiserver.stat.exists
+
+- name: Kube - Control Plane - Join | Set join command as variable
+  slurp:
+    src: /tmp/join_cmd_control_plane
+  register: join_cmd_control_plane
+  when: not kube_apiserver.stat.exists
+
+- name: Kube - Control Plane - Join | Run join command
+  shell: "{{ join_cmd_control_plane['content'] | b64decode }}"
+  when: not kube_apiserver.stat.exists

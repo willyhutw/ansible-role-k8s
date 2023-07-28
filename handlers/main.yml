@@ -1,0 +1,16 @@
+---
+
+- name: restart-containerd
+  service:
+    name: containerd.service
+    state: restarted
+
+- name: restart-haproxy
+  service:
+    name: haproxy.service
+    state: restarted
+
+- name: restart-keepalived
+  service:
+    name: keepalived.service
+    state: restarted
