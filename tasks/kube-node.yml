@@ -13,7 +13,7 @@
 
 - name: Kube - Node | Set join command as variable
   slurp:
-    src: /tmp/join_cmd_node
+    src: /tmp/join_cmd
   register: join_command
   when: not kubelet_conf.stat.exists
 
