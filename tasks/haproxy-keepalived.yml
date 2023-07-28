@@ -11,22 +11,22 @@
   template:
     src: haproxy.cfg.j2
     dest: /etc/haproxy/haproxy.cfg
-  notify:
-    - restart-haproxy
+  register: haproxy_conf
 
 - name: HAProxy - Keepalived | Start haproxy service
   service:
     name: haproxy.service
-    state: started
+    state: restarted
+  when: haproxy_conf.changed
 
 - name: HAProxy - Keepalived | Copy keepalived.conf
   template:
     src: keepalived.conf.j2
     dest: /etc/keepalived/keepalived.conf
-  notify:
-    - restart-keepalived
+  register: keepalived_conf
 
 - name: HAProxy - Keepalived | Start keepalived service
   service:
     name: keepalived.service
-    state: started
+    state: restarted
+  when: keepalived_conf.changed

@@ -20,10 +20,10 @@
   copy:
     src: containerd/config.toml
     dest: /etc/containerd/config.toml
-  notify:
-    - restart-containerd
+  register: containerd_conf
 
 - name: Container | Start containerd service
   service:
     name: containerd.service
-    state: started
+    state: restarted
+  when: containerd_conf.changed
