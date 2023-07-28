@@ -12,8 +12,12 @@
   when: not kube_apiserver.stat.exists
 
 - name: Kube - Control Plane - Init | Initial K8S cluster
-  shell: kubeadm init --config=/tmp/kubeadm-config.yml --upload-certs
+  shell: kubeadm init --config=/tmp/kubeadm-config.yml
+  register: kubeadm_init
+  retries: 3
+  until: kubeadm_init is succeeded or "field is immutable" in kubeadm_init.stderr
   when: not kube_apiserver.stat.exists
+  failed_when: kubeadm_init.rc != 0 and "field is immutable" not in kubeadm_init.stderr
 
 - name: Kube - Control Plane - Init | Generate the join command
   shell: kubeadm token create --print-join-command
