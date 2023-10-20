@@ -10,6 +10,7 @@ Ansible 2.9
 
 | Variable              | Value                                                                                  |
 | --------------------- | -------------------------------------------------------------------------------------- |
+| SINGLE_MASTER_NODE    | false                                                                                  |
 | KEEPALIVED_VROUTER_ID | 51                                                                                     |
 | KEEPALIVED_IFACE      | enp1s0                                                                                 |
 | CLUSTER_VIP           | 192.168.11.20                                                                          |
