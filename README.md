@@ -27,7 +27,7 @@ Ansible 2.9
 
 ```bash
 ### create the requirements.yml
-cat <<< EOL > requirements.yml
+cat << EOL > requirements.yml
 - src: git+https://github.com/willyhutw/ansible-role-k8s.git
   name: k8s
 EOL
@@ -36,7 +36,7 @@ EOL
 ansible-galaxy install -r requirements.yml -p ./roles
 
 ### create the playbook.yml
-cat <<< EOL > playbook.yml
+cat << EOL > playbook.yml
 - hosts: all
   become: yes
   gather_facts: yes
@@ -45,7 +45,7 @@ cat <<< EOL > playbook.yml
 EOL
 
 ### create the inventory.yml
-cat <<< EOL > inventory.yml
+cat << EOL > inventory.yml
 all:
   children:
     control_plane:
