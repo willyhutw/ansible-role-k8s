@@ -1,19 +1,19 @@
 ---
 
-- include: common.yml
+- include_tasks: common.yml
 
-- include: container.yml
+- include_tasks: container.yml
 
-- include: kube-common.yml
+- include_tasks: kube-common.yml
 
-- include: haproxy-keepalived.yml
+- include_tasks: haproxy-keepalived.yml
   when: not SINGLE_MASTER_NODE and inventory_hostname in groups['control_plane']
 
-- include: kube-control-plane-init.yml
+- include_tasks: kube-control-plane-init.yml
   when: inventory_hostname in groups['control_plane_init']
 
-- include: kube-control-plane-join.yml
+- include_tasks: kube-control-plane-join.yml
   when: not SINGLE_MASTER_NODE and inventory_hostname in groups['control_plane_join']
   
-- include: kube-node.yml
+- include_tasks: kube-node.yml
   when: inventory_hostname in groups['node']
