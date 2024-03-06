@@ -1,11 +1,11 @@
 ---
 
 galaxy_info:
-  author: willyhu
-  description: This is a Ansible role to install K8S by using kubeadm (Tested on Ubuntu 22.04 / Debian 12)
+  author: Willy Hu
+  description: This is a ansible role to deploy kubernetes cluster by using kubeadm (Tested on Ubuntu 22.04 and Debian 12).
   company: 
   license: "license (BSD, MIT)"
-  min_ansible_version: 2.9
+  min_ansible_version: 2.10
   platforms:
     - name: Ubuntu
       versions:

@@ -41,21 +41,25 @@
 
 - name: Kube - Control Plane - Init | Create .kube directory
   file:
-    path: "{{ lookup('env','HOME') }}/.kube"
+    path: "/home/{{ ansible_user }}/.kube"
     state: directory
-  become_user: "{{ lookup('env','USER') }}"
   when: not kube_apiserver.stat.exists
 
 - name: Kube - Control Plane - Init | Copy config file
   copy:
+    remote_src: true
     src: /etc/kubernetes/admin.conf
-    dest: "{{ lookup('env','HOME') }}/.kube/config"
-    remote_src: yes
-    owner: "{{ lookup('env','USER') }}"
-    group: "{{ lookup('env','USER') }}"
+    dest: "/home/{{ ansible_user }}/.kube/config"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
   when: not kube_apiserver.stat.exists
+
+- name: Kube - Control Plane - Init | Check if "~/.kube/config" exist
+  stat:
+    path: /home/{{ ansible_user }}/.kube/config
+  register: kube_config
 
 - name: Kube - Control Plane - Init | Install pod network addon
   shell: kubectl apply -f {{ KUBE_POD_NETWORK }}
-  become_user: "{{ lookup('env','USER') }}"
-  when: not kube_apiserver.stat.exists
+  become: false
+  when: kube_config.stat.exists

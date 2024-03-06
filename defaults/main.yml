@@ -1,14 +1,15 @@
 ---
 SINGLE_MASTER_NODE: false
 KEEPALIVED_VROUTER_ID: 51
-KEEPALIVED_IFACE: enp1s0
-CLUSTER_VIP: '192.168.11.20'
+KEEPALIVED_IFACE: 'enp1s0'
+CLUSTER_VIP: '192.168.12.20'
 CLUSTER_PORT: 8443
-CLUSTER_VERSION: '1.26.9'
-CLUSTER_NAME: k8s
-CLUSTER_DOMAIN: cluster.local
-KUBE_GPG_URL: https://packages.cloud.google.com/apt/doc/apt-key.gpg
-KUBE_GPG_PATH: /etc/apt/keyrings/kubernetes-archive-keyring.gpg
-KUBE_POD_NETWORK: https://raw.githubusercontent.com/projectcalico/calico/v3.26.1/manifests/calico.yaml
-KUBE_POD_CIDR: 10.244.0.0/16
-KUBE_SVC_CIDR: 10.96.0.0/16
+CLUSTER_NAME: 'k8s'
+CLUSTER_DOMAIN: 'cluster.local'
+CLUSTER_BRANCH: 'v1.28'
+CLUSTER_VERSION: '1.28.7'
+KUBE_GPG_URL_PREFIX: 'https://pkgs.k8s.io/core:/stable:'
+KUBE_GPG_PATH: '/etc/apt/keyrings/kubernetes-apt-keyring.gpg'
+KUBE_POD_NETWORK: 'https://raw.githubusercontent.com/projectcalico/calico/v3.27.2/manifests/calico.yaml'
+KUBE_POD_CIDR: '10.244.0.0/16'
+KUBE_SVC_CIDR: '10.96.0.0/16'

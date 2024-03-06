@@ -10,21 +10,17 @@
     update_cache: yes
 
 - name: Kube - Common | Add k8s official GPG key
-  apt_key:
-    url: "{{ KUBE_GPG_URL }}"
-    keyring: "{{ KUBE_GPG_PATH }}"
+  shell: curl -fsSL {{ KUBE_GPG_URL_PREFIX }}/{{ CLUSTER_BRANCH }}/deb/Release.key | sudo gpg --dearmor -o {{ KUBE_GPG_PATH }} --yes
 
 - name: Kube - Common | Copy docker.list to /etc/apt/sources.list.d/
-  template:
-    src: kubernetes.list.j2
-    dest: /etc/apt/sources.list.d/kubernetes.list
+  shell: echo 'deb [signed-by={{ KUBE_GPG_PATH }}] {{ KUBE_GPG_URL_PREFIX }}/{{ CLUSTER_BRANCH }}/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
 
 - name: Kube - Common | Install kubeadm, kubelet, kubectl
   apt:
     pkg:
-      - kubectl={{ CLUSTER_VERSION }}-00
-      - kubelet={{ CLUSTER_VERSION }}-00
-      - kubeadm={{ CLUSTER_VERSION }}-00
+      - kubectl={{ CLUSTER_VERSION }}-1.1
+      - kubelet={{ CLUSTER_VERSION }}-1.1
+      - kubeadm={{ CLUSTER_VERSION }}-1.1
     update_cache: yes
 
 - name: Kube - Common | Hold kubeadm, kubelet, kubectl version
