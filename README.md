@@ -4,7 +4,7 @@ This is a ansible role to deploy kubernetes cluster by using kubeadm (Tested on 
 
 ## Requirements
 
-Ansible 2.10.x
+Ansible 2.10.x or above
 
 ## Default variables
 
@@ -26,10 +26,10 @@ Ansible 2.10.x
 | KUBE_POD_NETWORK      | <https://raw.githubusercontent.com/projectcalico/calico/v3.27.2/manifests/calico.yaml> |
 
 ## Example
-### !!! DO NOT NEED to clone this repo, we will install this role by running ansible-galaxy command !!!
+
+### DO NOT NEED to clone this repo, we will install this role by running ansible-galaxy command.
 
 ```bash
-
 ### create the requirements.yml
 cat << EOL > requirements.yml
 - src: git+https://github.com/willyhutw/ansible-role-k8s.git
@@ -48,8 +48,8 @@ cat << EOL > playbook.yml
     - roles/k8s
 EOL
 
-### create the inventory.yml
-cat << EOL > inventory.yml
+### --- deploy 3-node control plane ---
+cat << EOL > inventory_multi_master.yml
 all:
   children:
     control_plane:
@@ -76,11 +76,33 @@ all:
     ansible_ssh_common_args: "-o StrictHostKeyChecking=no"
 EOL
 
-### run it! (pass variables to rewrite the defaults if you need.)
-ansible-playbook -i inventory.yml playbook.yml \
+### pass variables to rewrite the defaults if you need.
+ansible-playbook -i inventory_multi_master.yml playbook.yml \
+-e ansible_ssh_user=$TARGET_MACHINE_USERNAME \
+-e KEEPALIVED_VIP=192.168.12.20
+
+### --- deploy single-node control plane ---
+cat << EOL > inventory_single_master.yml
+all:
+  children:
+    control_plane:
+      children:
+        control_plane_init:
+          hosts:
+            192.168.12.21:
+              name: k8s-master-1
+    node:
+      hosts:
+        192.168.12.31:
+        192.168.12.32:
+        192.168.12.33:
+  vars:
+    ansible_ssh_common_args: "-o StrictHostKeyChecking=no"
+EOL
+
+### remember to rewrite the default SINGLE_MASTER_NODE variable.
+ansible-playbook -i inventory_single_master.yml playbook.yml \
 -e ansible_ssh_user=$TARGET_MACHINE_USERNAME \
 -e KEEPALIVED_VIP=192.168.12.20 \
--e CLUSTER_VERSION=1.28.6 \
--e CLUSTER_NAME=mycluster \
--e CLUSTER_DOMAIN=mydomain
+-e SINGLE_MASTER_NODE=true
 ```
