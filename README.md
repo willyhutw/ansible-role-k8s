@@ -17,8 +17,8 @@ Ansible 2.10.x or above
 | CLUSTER_PORT          | 8443                                                                                   |
 | CLUSTER_NAME          | k8s                                                                                    |
 | CLUSTER_DOMAIN        | cluster.local                                                                          |
-| CLUSTER_BRANCH        | v1.28                                                                                  |
-| CLUSTER_VERSION       | 1.28.7                                                                                 |
+| CLUSTER_BRANCH        | v1.30                                                                                  |
+| CLUSTER_VERSION       | 1.30.4                                                                                 |
 | KUBE_GPG_URL_PREFIX   | <https://pkgs.k8s.io/core:/stable:>                                                    |
 | KUBE_GPG_PATH         | /etc/apt/keyrings/kubernetes-apt-keyring.gpg                                           |
 | KUBE_POD_CIDR         | 10.244.0.0/16                                                                          |
